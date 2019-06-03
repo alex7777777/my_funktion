@@ -6,7 +6,7 @@
 my_spy <- function(df_ids_to_check, 
                    time_check=NA,
                    daily=F,
-                   name_spy_file='my_spy_log_file.csv',
+                   name_spy_file='my_spy_logfile.csv',
                    folder_for_save_check_data='csv_tab',
                    days_retro=NA,
                    number_max_ids_to_check=3) {
