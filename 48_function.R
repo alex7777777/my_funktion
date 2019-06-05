@@ -4,17 +4,25 @@
 # saving them into separate variables                                      #
 # ######################################################################## #
 
+library(stringr)
+library(rlang)
+library(tidyr)
+
 my_split_save <- function(col_to_split, delimiter="_") {
-  
-  library(stringr)
-  library(rlang)
-  library(tidyr)
   
   max_numb_pos <- max(str_count(col_to_split, delimiter))+1
   new_string_var <- data.frame(1:length(col_to_split))
   
   # create dummy variables
-  source("my_function/17_function.R")
+
+  get_all_my_function  <- function(funct_name) {
+    url_my_function <- "https://raw.githubusercontent.com/alex7777777/my_funktion/master/"
+    source(url(paste0(url_my_function, funct_name)))
+    closeAllConnections()
+  }
+  # source("my_function/17_function.R")
+  get_all_my_function("17_function.R")
+  
   new_string_var <- my_add_new_var(new_string_var,
                            max_numb_pos,
                            "pos_",
