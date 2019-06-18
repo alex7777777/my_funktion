@@ -12,15 +12,22 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
   library(jsonlite)
   library(tidyr)
   library(dplyr)
-  # library(ggplot2)
   library(httpuv)
+  
+  # Access to all my functions
+  get_all_my_function  <- function(funct_name) {
+    url_my_function <- "https://raw.githubusercontent.com/alex7777777/my_funktion/master/"
+    source(url(paste0(url_my_function, funct_name)))
+    closeAllConnections()
+  }
   
   attribution_v1 <- function(date_from, number_days) {
   
-  date_to   <- as.character(as.Date(date_from)+number_days-1)
+  # date_to   <- as.character(as.Date(date_from)+number_days-1)
+  date_to   <- as.character(as.Date(date_from) + number_days)
   date_from_past <- as.character(as.Date(date_from) - nr_days_retrospect)
   
-  project <- "rd-bigdata-prd-v002"     # ag: Name DB in Big Query
+  project <- "rd-bigdata-prd-v002"
   orders_sql <- paste0("SELECT
                        CUSTOMER_UUID,
                        REFERENCE,
@@ -41,19 +48,26 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
                        
                        WHERE _PARTITIONTIME >= '", as.character(as.Date(date_from) - 15), " 00:00:00'
                        AND _PARTITIONTIME <= '", as.character(as.Date(date_to) + 15), " 00:00:00'
-                       AND DATE(received_at) <= DATE('", date_to, "')
+                       AND DATE(received_at) <  DATE('", date_to, "')
                        AND DATE(received_at) >= DATE('", date_from, "') 
                        AND activity = 'order_created'
                        ;")
   
-  source("my_function/39_function.R")
+  # source("my_function/39_function.R")
+  get_all_my_function("39_function.R")
   orders_raw <- my_bigquery(project, orders_sql)
+  
+  # source("my_function/43_function.R")
+  get_all_my_function("43_function.R")
+  my_spy(orders_raw[,c("CUSTOMER_UUID", "order_id", "REFERENCE")], 
+         orders_raw$order_created_received_at, days_retrospect)
   
   # Filtering
   
   # a) only orders, order_value_cent > 0
   orders <- orders_raw
   orders$order_value_cent <- as.integer(orders$order_value_cent)
+  orders <- subset(orders, order_value_cent > 0)
   
   # b) only lieferservice (DELIVERY) zzgl. mix cusomer (Marktplatz):
   orders <- subset(orders, (DELIVERY_TYPE_1 == '"DELIVERY"') | (DELIVERY_TYPE_2 == '"DELIVERY"'))
@@ -65,13 +79,16 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
   orders$web_vs_app <- ifelse(orders$web_app == '"WebShop"', "Web", "App")
   orders <- orders[grepl('Web', orders$web_app) , ]
   
-  # Activities: Orders, mit vorangegangenen Activities (30 Tage = nr_days_retrospect)
+  my_spy(orders[,c("CUSTOMER_UUID", "order_id", "REFERENCE")], 
+         orders$order_created_received_at, days_retrospect)
+  
+  # Activities: Orders, mit vorangegangenen 'nr_days_retrospect' (default=30) Activities
   
   # 2. SQL: 
-  # a) Identifizieren von "customer_uuid" nur für Käufer ['order_created'] in der Zeit [-11 days; -4 days] vom akt. Datum
+  # a) Identifizieren von "customer_uuid" nur fuer Kaeufer ['order_created'] in der Zeit [-11 days; -4 days] vom akt. Datum
   # b) und nur mit einer identifizierbaren CoockiesID [not reference = '']
   # c) aggregiert (group by) "reference" und "customer_uuid"
-  # d) Join über "reference" von Käufern a)-c) mit CJ von sich selbst mit vorangegangenen Activities [-70 days; -4 days], 
+  # d) Join Ã¼ber "reference" von Kaeufern a)-c) mit CJ von sich selbst mit vorangegangenen Activities [-70 days; -4 days], 
   #    auch wenn sie damals nichts gekauft haben [zzgl. 'shop_visited','campaign_hit']
   
   activities_ref_sql <- paste0("#standardSQL
@@ -114,7 +131,7 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
                                FROM `rd-bigdata-prd-v002.analytics.customer_activity`
                                WHERE _PARTITIONTIME >= '", as.character(as.Date(date_from) - 15), " 00:00:00'
                                AND _PARTITIONTIME <= '", as.character(as.Date(date_to) + 15), " 00:00:00'
-                               and DATE(received_at) <= DATE('", date_to, "')
+                               and DATE(received_at) <  DATE('", date_to, "')
                                and DATE(received_at) >= DATE('", date_from, "')
                                and activity = 'order_created'
                                )
@@ -124,13 +141,16 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
                                
                                WHERE _PARTITIONTIME >= '", as.character(as.Date(date_from) - 15), " 00:00:00'
                                AND _PARTITIONTIME <= '", as.character(as.Date(date_to) + 15), " 00:00:00'
-                               AND DATE(received_at) <= DATE('", date_to, "')
+                               AND DATE(received_at) < DATE('", date_to, "')
                                AND DATE(received_at) > DATE('", date_from_past, "')
                                AND activity in ('shop_visited','campaign_hit','order_created')
                                )
                                ")
   
   activities_ref <- my_bigquery(project, activities_ref_sql)
+  
+  my_spy(activities_ref[,c("customer_uuid", "order_id", "reference")], 
+         activities_ref$received_at, days_retrospect)
   
   activities_uuid_sql <- paste0("#standardSQL
                                 SELECT
@@ -165,7 +185,7 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
                                 FROM `rd-bigdata-prd-v002.analytics.customer_activity`
                                 WHERE _PARTITIONTIME >= '", as.character(as.Date(date_from) - 15), " 00:00:00'
                                 AND _PARTITIONTIME <= '", as.character(as.Date(date_to) + 15), " 00:00:00'
-                                AND DATE(received_at) <= DATE('", date_to, "')
+                                AND DATE(received_at) <  DATE('", date_to, "')
                                 AND DATE(received_at) >= DATE('", date_from, "')
                                 AND activity = 'order_created' 
                                 group by 1
@@ -173,7 +193,7 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
                                 
                                 WHERE _PARTITIONTIME >= '", as.character(as.Date(date_from) - 15), " 00:00:00'
                                 AND _PARTITIONTIME <= '", as.character(as.Date(date_to) + 15), " 00:00:00'
-                                AND DATE(received_at) <= DATE('", date_to, "')
+                                AND DATE(received_at) <  DATE('", date_to, "')
                                 AND DATE(received_at) >= DATE('", date_from_past, "')
                                 AND activity in ('shop_visited','campaign_hit','order_created')
                                 AND reference = ''
@@ -181,20 +201,22 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
                                 ")
   
   activities_uuid <- query_exec(activities_uuid_sql,project = project,use_legacy_sql = FALSE,  max_pages = Inf)
-  
+ 
+  my_spy(activities_uuid[,c("customer_uuid", "order_id", "reference")], 
+         activities_uuid$received_at, days_retrospect)
   
   # ######################################################################### #
-  #  alle Order_created einlesen, für Neukunden/Bestandskundenunterscheidung
+  #  alle Order_created einlesen, fÃ¼r Neukunden/Bestandskundenunterscheidung
   # ANMERKUNG: Die Daten wurden erst ab dem 2017-01-01 gesammelt, damit 
-  # können Neu-/Bestandskunden nur beschränkt unterschieden werden
+  # kÃ¶nnen Neu-/Bestandskunden nur beschrÃ¤nkt unterschieden werden
   # ######################################################################### #
   
   # 4. SQL: 
-  # a) Identifizieren von "customer_uuid" nur für die Käufer ['order_created'] in der Zeit [-11 days; -4 days] vom akt. Datum,
-  #    gruppiert über "customer_uuid", "received_at" und "order_id"
-  # b) Join über "customer_uuid" der Käufer mit CJ von sich selbst mit vorangegangenen Käufern
+  # a) Identifizieren von "customer_uuid" nur fuer die Kaeufer ['order_created'] in der Zeit [-11 days; -4 days] vom akt. Datum,
+  #    gruppiert ueber "customer_uuid", "received_at" und "order_id"
+  # b) Join Ã¼ber "customer_uuid" der KÃ¤ufer mit CJ von sich selbst mit vorangegangenen Kaeufern
   # c) Liefern von Zusatzspalten falls vorhanden: Vorletzter Kauf "order_id_before" mit dem Datum "received_at_before"
-  # um nur dijenige Aktivitäten zu betrachten, die in der Zeit zwischen den Käufern vergangen sind
+  # um nur dijenige Aktivitaeten zu betrachten, die in der Zeit zwischen den Kaeufern vergangen sind
   
   orders_all_sql <- paste0("#standardSQL
                            SELECT
@@ -228,7 +250,7 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
                            FROM `rd-bigdata-prd-v002.analytics.customer_activity`
                            WHERE _PARTITIONTIME >= '", as.character(as.Date(date_from) - 15), " 00:00:00'
                            AND _PARTITIONTIME <= '", as.character(as.Date(date_to) + 15), " 00:00:00'
-                           AND DATE(received_at) <= DATE('", date_to, "')
+                           AND DATE(received_at) <  DATE('", date_to, "')
                            AND DATE(received_at) >= DATE('", date_from, "')
                            AND activity = 'order_created' 
                            group by 1,2,3
@@ -239,6 +261,9 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
                            ")
   
   orders_all_time <- my_bigquery(project, orders_all_sql)
+  
+  my_spy(orders_all_time[,c("customer_uuid", "order_id")], 
+         orders_all_time$received_at, days_retrospect)
   
   orders_all_count <- group_by(orders_all_time, order_id) %>% 
     summarise(anzahl_orders=n())
@@ -262,15 +287,18 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
   # Ausschluss von Dubletten, aber auch von shop_visits mit zeitgleicher campaign_hit
   activities_non_orders_unique <- distinct(activities_non_orders, customer_uuid, received_at, .keep_all = TRUE)
   
-  # 6. activities_non_orders_unique - Aktivitäten von Käufern
+  # 6. activities_non_orders_unique - AktivitÃ¤ten von KÃ¤ufern
   
-  # Aktivitäten der zeitlich darauffolgenden Order zufügen
+  # AktivitÃ¤ten der zeitlich darauffolgenden Order zufÃ¼gen
   activities_unique = rbind(activities_non_orders_unique, activities_orders_unique)
   activities_unique <- arrange(activities_unique, customer_uuid, received_at)
   
   activities_test <- activities_unique %>%
     group_by(customer_uuid) %>% fill(order_id, .direction = c("up")) %>% ungroup()
   activities_001 <- filter(activities_test, !is.na(order_id))
+  
+  my_spy(activities_001[,c("customer_uuid", "order_id", "reference")], 
+         activities_001$received_at, days_retrospect)
   
   # 7.
   
@@ -322,6 +350,9 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
     TRUE ~ attribution_001c$marketing_channel)
   )
   
+  my_spy(attribution_001d[, c("customer_uuid", "order_id", "reference")], 
+         attribution_001d$received_at, days_retrospect)
+  
   # 9. attribution_001 e-i
   
   attribution_001e <- attribution_001d %>%
@@ -337,8 +368,14 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
   #  attribution_001f <- attribution_001e %>%
   #  filter(!(activity == "shop_visited" & marketing_channel == "dir" & lag.activity == "shop_visited" & lag.marketing_channel == 'dir' & time_diff_min < 30 & order_id == lag.order_id))
   
+  my_spy(attribution_001e[, c("customer_uuid", "order_id", "reference")], 
+         attribution_001e$received_at, days_retrospect)
+  
   attribution_001f <- attribution_001e %>%
     filter(!(activity == lag.activity & marketing_channel == lag.marketing_channel & time_diff_min < 30 & order_id == lag.order_id))
+  
+  my_spy(attribution_001f[, c("customer_uuid", "order_id", "reference")], 
+         attribution_001f$received_at, days_retrospect)
   
   # Markierung von order_created ohne ZwischenVisit: order_double und order_created ohne visit/campaign: order_wo_visit
   attribution_001g <- attribution_001f %>%
@@ -347,15 +384,26 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
   count(attribution_001g,order_double)  # 334 Faelle / new 2019-03-11: 296 Faelle
   count(attribution_001g,order_wo_visit) # 80556 Faelle (334 sind hier eingeschlossen)
   
+  my_spy(attribution_001g[, c("customer_uuid", "order_id", "reference")], 
+         attribution_001g$received_at, days_retrospect)
   
-  # Activities, die mehr als 30 Tage vor Order liegen, rausfiltern
+  # Activities, die mehr als 'nr_days_retrospect' (default=30) Tage vor Order liegen, rausfiltern
   
   attribution_001h <- attribution_001g %>%
-    filter(days_activity_order < 30)
+    filter(days_activity_order < nr_days_retrospect)
+  # filter(days_activity_order < 30)
+  
+  #nr_days_retrospect
+  
+  my_spy(attribution_001h[, c("customer_uuid", "order_id", "reference")], 
+         attribution_001h$received_at, days_retrospect)
   
   # Order_Created rausfiltern
   attribution_001i <- attribution_001h %>%
     filter(activity != 'order_created')
+  
+  my_spy(attribution_001i[, c("customer_uuid", "order_id", "reference")], 
+         attribution_001i$received_at, days_retrospect)
   
   # 10. attribution_002 - 006
   
@@ -365,19 +413,23 @@ my_attribution <- function(date_fr, nr_days=1, nr_days_retrospect=30, daily_att=
   attribution_003 <- left_join(attribution_001i,attribution_002,by="order_id")
   attribution_004 <- within(attribution_003,key <- 1/touchpoints)
   
-  # Function
-  source("my_function/my_attr_calc_func.R")
+  my_spy(attribution_004[, c("customer_uuid", "order_id", "reference")], 
+         attribution_004$received_at, days_retrospect)
+  
+  # source("my_function/my_attr_calc_func.R")
+  get_all_my_function("my_attr_calc_func.R")
   attribution_final <- attribution_calc(attribution_004)
   att_date <- paste0("from_", date_from, "_to_", date_to)
   attribution_final$datum <- att_date
   
-  source("my_function/03_function.R")
+  # source("my_function/03_function.R")
+  get_all_my_function("03_function.R")
   my_save_tab_function(attribution_final, "attribution_final")
-  
   }
   
   if(daily_att) {
-    source("my_function/46_function.R")
+    # source("my_function/46_function.R")
+    get_all_my_function("46_function.R")
     day_date_list <- my_day_date(date_fr, nr_days)
     
     for(i in 1:nr_days){
