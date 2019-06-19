@@ -24,10 +24,11 @@ my_url_changeling <- function(url_string_vector) {
   # source("my_function/49_function.R")
   url_string_vector <- gsub(" ", "", url_string_vector, F) # as substring, not as matching
   url_string_vector <- gsub("_nn", "", url_string_vector, F)
-
+  url_string_vector <- gsub("%2C", "", url_string_vector, F)
+  
   # Add new variables between delimiter from urs-strings to the DF
   get_all_my_function("48_function.R")
-  get_all_my_function("17_function.R")
+  # get_all_my_function("17_function.R")
   # source("my_function/48_function.R")
   # source("my_function/17_function.R")
   tree_vector <- cbind(data.frame(url_string_vector), my_split_save(url_string_vector, "_"))
