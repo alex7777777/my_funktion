@@ -5,6 +5,8 @@
 
 # Function: SQL-Access to the Adobe Analytics tables
 
+options(scipen = 999) # Original IDs
+
 my_adobe <- function(my_rs, my_date_from, my_date_to,
                      my_used_elements, my_used_metrics) {
   
