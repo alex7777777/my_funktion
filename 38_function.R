@@ -5,15 +5,21 @@
 
 # Function: SQL-Access to the Adobe Analytics tables
 
-options(scipen = 999) # Original IDs
+options(scipen = 999) # no scientific notation
+
+library(RSiteCatalyst)
+library(curl)
+library(tibble)
+library(dplyr)
+library(stringr)
 
 my_adobe <- function(my_rs, my_date_from, my_date_to,
                      my_used_elements, my_used_metrics) {
   
   library(RSiteCatalyst)
-  
-  # Access from the local file '.Renviron'
-  SCAuth(Sys.getenv("userid"), Sys.getenv("pwd"))
+
+  SCAuth(Sys.getenv("userid"), Sys.getenv("pwd")) # Access from ".Renviron"
+
   report_suites <- GetReportSuites()
   elements <- GetElements(my_rs)
   metrics <- GetMetrics(my_rs)
