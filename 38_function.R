@@ -24,7 +24,7 @@ my_adobe <- function(my_rs, my_date_from, my_date_to,
   elements <- GetElements(my_rs)
   metrics <- GetMetrics(my_rs)
   
-  my_adobe_df <- QueueDataWarehouse(reportsuite.id = rs,
+  my_adobe_df <- QueueDataWarehouse(reportsuite.id = my_rs,
                                      date.from = my_date_from,
                                      date.to   = my_date_to,
                                      metrics = my_used_metrics,
