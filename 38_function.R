@@ -31,7 +31,9 @@ my_adobe <- function(my_rs, my_date_from, my_date_to,
                                      elements = my_used_elements,
                                      date.granularity = "day",
                                      interval.seconds = 10,
-                                     max.attempts = 200, # 200
+                                     max.attempts = 200,  # =  10 - for a ~day 
+                                                          # = 200 - for a ~week 
+                                                          # = 700 - for ~15 days etc.
                                      enqueueOnly = F)
   
   return(my_adobe_df)
