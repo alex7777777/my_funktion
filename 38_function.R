@@ -32,7 +32,7 @@ my_adobe <- function(my_rs, my_date_from, my_date_to,
                                      date.to   = my_date_to,
                                      metrics = my_used_metrics,
                                      elements = my_used_elements,
-                                     date.granularity = "day",
+                                     date.granularity = "hour", # = "day"
                                      interval.seconds = 10,
                                      max.attempts = 200,  # =  10 - for a ~day 
                                                           # = 200 - for a ~week 
