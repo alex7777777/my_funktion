@@ -17,5 +17,14 @@ my_day_date <- function(date_from_char, number_days, date_takt=1) {
     date_list_c <- c(date_list_c, date_list[[i]])
   }
   
-  return(date_list_c)
+  date_list_to_c <- c()
+  for(i in 1:length(date_list_c)) {
+    date_list_to_c <- c(date_list_to_c, as.character(as.Date(date_list_c[i]) + date_takt - 1))
+  }
+  
+  my_date <- list()
+  my_date[[1]] <- date_list_c
+  my_date[[2]] <- date_list_to_c
+  
+  return(my_date)
 }
