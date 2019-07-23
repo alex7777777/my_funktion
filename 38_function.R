@@ -1,5 +1,5 @@
 #######################################################
-# 2019-01-08 - by Alex Gorbach
+# 2019-07-23 - by Alex Gorbach
 # DB Zugriff - Adobe
 #######################################################
 
@@ -18,26 +18,38 @@ my_adobe <- function(my_rs, my_date_from, my_date_to,
   
   library(RSiteCatalyst)
 
+  # key <- Sys.getenv("userid") # Zugriff zu '.Renviron'
+  # secret <- Sys.getenv("pwd") # ebd.
+  
   SCAuth(Sys.getenv("userid"), Sys.getenv("pwd")) # Access from ".Renviron"
 
   report_suites <- GetReportSuites()
   elements <- GetElements(my_rs)
   metrics <- GetMetrics(my_rs)
-  segments <- GetSegments(my_rs)
-  props <- GetProps(my_rs)
-  evars <- GetEvars(my_rs)
+  segments <- GetSegments(rs_web)
+  
+  # dynamic adjustment of the number of attempts 
+  # depending on the number of days for data analysis
+  attempts <- 10 * round(as.integer((as.Date(my_date_to) - as.Date(my_date_from) + 1)) ^ 0.8)
+  
+  #  1x day:  attempts=10
+  #  2x days: attempts=20
+  #  7x days: attempts=50
+  # 15x days: attempts=90
+  # 30x days: attempts=150
+  
+  print(paste("max.attempts =", attempts))
   
   my_adobe_df <- QueueDataWarehouse(reportsuite.id = my_rs,
-                                     date.from = my_date_from,
-                                     date.to   = my_date_to,
-                                     metrics = my_used_metrics,
-                                     elements = my_used_elements,
-                                     date.granularity = "hour", # = "day"
-                                     interval.seconds = 10,
-                                     max.attempts = 200,  # =  10 - for a ~day 
-                                                          # = 200 - for a ~week 
-                                                          # = 700 - for ~15 days etc.
-                                     enqueueOnly = F)
+                                    date.from = my_date_from,
+                                    date.to   = my_date_to,
+                                    metrics = my_used_metrics,
+                                    elements = my_used_elements,
+                                    date.granularity = "hour", # = "day"
+                                    interval.seconds = 10,
+                                    max.attempts = attempts,
+                                    # max.attempts = 200, # =  ~10 - for a day 
+                                    enqueueOnly = F)
   
   return(my_adobe_df)
 }
