@@ -6,10 +6,13 @@
 # Generate SQL-Strings for Big Query survey
 
 my_sql_generator <- function(sql_typ_select, 
-                             date_fr, 
-                             date_to=7, 
-                             date_fr_past=15) { 
+                             date_fr,   # YYYY-MM-DD
+                             days_to=7, 
+                             days_fr_past=15) { 
   
+  date_to <- as.character(as.Date(date_fr) + days_to)
+  date_fr_past <- as.character(as.Date(date_fr) - days_fr_past)
+    
   sql_return <- switch(sql_typ_select,
                        
                        "orders_sql" =          paste0("SELECT
@@ -37,6 +40,13 @@ my_sql_generator <- function(sql_typ_select,
                                                       AND activity = 'order_created'
                                                       ;"),
                        
+	  # 2. SQL: 
+    # a) Identifizieren von "customer_uuid" nur fuer Kaeufer ['order_created'] in der Zeit [-11 days; -4 days] vom akt. Datum
+    # b) und nur mit einer identifizierbaren CoockiesID [not reference = '']
+    # c) aggregiert (group by) "reference" und "customer_uuid"
+    # d) Join ueber "reference" von Kaeufern a)-c) mit CJ von sich selbst mit vorangegangenen Activities [-70 days; -4 days], 
+    #    auch wenn sie damals nichts gekauft haben [zzgl. 'shop_visited','campaign_hit']
+	
                        "activities_ref_sql" =  paste0("#standardSQL
                                                       SELECT
                                                       reference
@@ -141,6 +151,13 @@ my_sql_generator <- function(sql_typ_select,
                                                       )
                                                       "),
                        
+	  # 4. SQL: 
+    # a) Identifizieren von "customer_uuid" nur fuer die Kaeufer ['order_created'] in der Zeit [-11 days; -4 days] vom akt. Datum,
+    #    gruppiert ueber "customer_uuid", "received_at" und "order_id"
+    # b) Join ueber "customer_uuid" der Kaeufer mit CJ von sich selbst mit vorangegangenen Kaeufern
+    # c) Liefern von Zusatzspalten falls vorhanden: Vorletzter Kauf "order_id_before" mit dem Datum "received_at_before"
+    # um nur dijenige Aktivitaeten zu betrachten, die in der Zeit zwischen den Kaeufern vergangen sind
+	
                        "orders_all_sql" =      paste0("#standardSQL
                                                       SELECT
                                                       customer_uuid
