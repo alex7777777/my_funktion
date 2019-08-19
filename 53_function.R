@@ -203,8 +203,8 @@ my_sql_generator <- function(sql_typ_select,
                        "dwh_check_id_sql" =    paste0("SELECT DISTINCT RO_GLOBAL_ORDER_ID
                                                       FROM REWE_DIGITAL.S_ROL_DIGITAL_KOPF_DM
                                                       WHERE RO_BESTELLSTATUS_ID IN (104,109)
-                                                      AND RO_ORDER_KAL_TAG_ID >= '2019-08-01'
-                                                      AND RO_ORDER_KAL_TAG_ID < '2019-08-03';
+                                                      AND RO_ORDER_KAL_TAG_ID >= '", date_fr ,"'
+                                                      AND RO_ORDER_KAL_TAG_ID < '", date_to ,"';
                                                       ")
                        
                        )
