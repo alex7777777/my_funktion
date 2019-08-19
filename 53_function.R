@@ -137,7 +137,7 @@ my_sql_generator <- function(sql_typ_select,
                                                       WHERE _PARTITIONTIME >= '", as.character(as.Date(date_fr) - 15), " 00:00:00'
                                                       AND _PARTITIONTIME   <  '", as.character(as.Date(date_to) + 15), " 00:00:00'
                                                       AND received_at      >= '", as.character(as.Date(date_fr)), " 00:00:00'
-                                                      AND received_at      <= '", as.character(as.Date(date_to)), " 00:00:00'
+                                                      AND received_at      <  '", as.character(as.Date(date_to)), " 00:00:00'
                                                       AND activity = 'order_created' 
                                                       group by 1
                                                       ) as b on (a.customer_uuid = b.customer_uuid)
