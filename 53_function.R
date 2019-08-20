@@ -205,6 +205,22 @@ my_sql_generator <- function(sql_typ_select,
                                                       WHERE RO_BESTELLSTATUS_ID IN (104,109)
                                                       AND RO_ORDER_KAL_TAG_ID >= '", date_fr ,"'
                                                       AND RO_ORDER_KAL_TAG_ID < '", date_to ,"';
+                                                      "),
+                       
+                       "dwh_testing_id_sql" =  paste0("SELECT TOP 100 *
+                                                      FROM REWE_DIGITAL.S_ROL_DIGITAL_KOPF_DM
+                                                      WHERE RO_BESTELLSTATUS_ID IN (104,109)
+                                                      AND RO_ORDER_KAL_TAG_ID >= '", date_fr ,"'
+                                                      AND RO_ORDER_KAL_TAG_ID < '", date_to ,"';
+                                                      "),
+                       
+                       "dwh_orders_all_count_sql" =  paste0("SELECT RO_GLOBAL_ORDER_ID AS order_id 
+                                                      , ANZAHL_KAEUFE_SEQ AS anzahl_orders
+                                                      , CASE WHEN (ANZAHL_KAEUFE_SEQ = 1) THEN 'Neukunde' ELSE 'Bestandskunde' END AS kundenstatus
+                                                      FROM REWE_DIGITAL.S_ROL_DIGITAL_KOPF_DM
+                                                      WHERE RO_BESTELLSTATUS_ID IN (104,109)
+                                                      AND RO_ORDER_KAL_TAG_ID >= '", date_fr ,"'
+                                                      AND RO_ORDER_KAL_TAG_ID < '", date_to ,"';
                                                       ")
                        
                        )
