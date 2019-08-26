@@ -54,6 +54,7 @@ my_sql_generator <- function(sql_typ_select,
                                                       ,activity
                                                       ,received_at
                                                       ,IFNULL(marketing_channel,'dir') as marketing_channel
+                                                      ,IFNULL(marketing_channel_long,'dir') as marketing_channel_long
                                                       ,m_channel_referer
                                                       ,order_id
                                                       
@@ -67,6 +68,7 @@ my_sql_generator <- function(sql_typ_select,
                                                       ,received_at
                                                       ,JSON_EXTRACT(payload,'$.m_channel_referer') as m_channel_referer
                                                       ,SUBSTR(REPLACE(JSON_EXTRACT(payload,'$.marketing_channel'),'\"',''),1,3) as marketing_channel
+                                                      ,REPLACE(JSON_EXTRACT(payload,'$.marketing_channel'),'\"','') as marketing_channel_long
                                                       ,JSON_EXTRACT(payload,'$.id') as order_id
                                                       
                                                       FROM `rd-bigdata-prd-v002.analytics.customer_activity` as a
@@ -83,7 +85,7 @@ my_sql_generator <- function(sql_typ_select,
                                                       (
                                                       SELECT 
                                                       customer_uuid
-                                                      
+
                                                       FROM `rd-bigdata-prd-v002.analytics.customer_activity`
                                                       WHERE _PARTITIONTIME >= '", as.character(as.Date(date_fr) - 15), " 00:00:00'
                                                       AND _PARTITIONTIME   <  '", as.character(as.Date(date_to) + 15), " 00:00:00'
