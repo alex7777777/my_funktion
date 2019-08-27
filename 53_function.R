@@ -216,14 +216,34 @@ my_sql_generator <- function(sql_typ_select,
                                                       AND RO_ORDER_KAL_TAG_ID < '", date_to ,"';
                                                       "),
                        
+                       # "dwh_orders_all_count_sql" =  paste0("SELECT RO_GLOBAL_ORDER_ID AS order_id 
+                       #                                , ANZAHL_KAEUFE_SEQ AS anzahl_orders
+                       #                                , CASE WHEN (ANZAHL_KAEUFE_SEQ = 1) THEN 'Neukunde' ELSE 'Bestandskunde' END AS kundenstatus
+                       #                                FROM REWE_DIGITAL.S_ROL_DIGITAL_KOPF_DM
+                       #                                WHERE RO_BESTELLSTATUS_ID IN (104,109)
+                       #                                AND RO_ORDER_KAL_TAG_ID >= '", date_fr ,"'
+                       #                                AND RO_ORDER_KAL_TAG_ID < '", date_to ,"';
+                       #                                "),
+                       
                        "dwh_orders_all_count_sql" =  paste0("SELECT RO_GLOBAL_ORDER_ID AS order_id 
-                                                      , ANZAHL_KAEUFE_SEQ AS anzahl_orders
-                                                      , CASE WHEN (ANZAHL_KAEUFE_SEQ = 1) THEN 'Neukunde' ELSE 'Bestandskunde' END AS kundenstatus
-                                                      FROM REWE_DIGITAL.S_ROL_DIGITAL_KOPF_DM
-                                                      WHERE RO_BESTELLSTATUS_ID IN (104,109)
-                                                      AND RO_ORDER_KAL_TAG_ID >= '", date_fr ,"'
-                                                      AND RO_ORDER_KAL_TAG_ID < '", date_to ,"';
-                                                      ")
+                                                            , ANZAHL_KAEUFE_SEQ
+                                                            , ANZAHL_KAEUFE_SEQ_LS
+                                                            , ANZAHL_KAEUFE_SEQ_AS
+                                                            -- , CASE WHEN (ANZAHL_KAEUFE_SEQ_LS = 1) THEN 'Neukunde' WHEN (ANZAHL_KAEUFE_SEQ_LS IS NULL) THEN NULL ELSE 'Bestandskunde' END AS kundenstatus
+                                                            , RO_CHANNEL
+                                                            , RO_RFM_SEGMENT_ID
+                                                            , RO_CUSTOMERTYPE
+                                                            , a.RO_SERVICE_ID
+                                                            , Region
+                                                            , Standort
+                                                            FROM  REWE_DIGITAL.S_ROL_DIGITAL_KOPF_DM AS a INNER JOIN REWE_DIGITAL.V_D_RO_USERDATA AS b ON  a.RO_USER_ID = b.RO_USER_ID
+                                                            INNER JOIN REWE_DIGITAL.LU_D_MA AS c ON a.MA_ID = c.MA_ID
+                                                            LEFT JOIN REWE_DIGITAL.ocma_kufo_plz_region_zuordnung zz ON a.RO_ZIPCODE_LIEF = zz.PLZ
+                                                            WHERE RO_BESTELLSTATUS_ID IN (104,109)
+                                                            AND RO_ORDER_KAL_TAG_ID >= '", date_fr ,"'
+                                                            AND RO_ORDER_KAL_TAG_ID < '", date_to ,"'
+                                                            AND RO_GLOBAL_ORDER_ID NOT LIKE 'Z-ZZZ-ZZZ-ZZZ';
+                                                            ")
                        
                        )
   
