@@ -20,10 +20,11 @@ my_url_changeling <- function(url_string_vector) {
   options(warn=0)
   
   # clean " "; "_nn"
+  # Update 2019-08-27: "nn"  should remain in strings(!)
   get_all_my_function("49_function.R")
   # source("my_function/49_function.R")
   url_string_vector <- gsub(" ", "", url_string_vector, F) # as substring, not as matching
-  url_string_vector <- gsub("_nn", "", url_string_vector, F)
+  # url_string_vector <- gsub("_nn", "", url_string_vector, F)
   url_string_vector <- gsub("%2C", "", url_string_vector, F)
   
   # Add new variables between delimiter from urs-strings to the DF
