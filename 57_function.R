@@ -5,8 +5,8 @@
 
 my_password_generator <- function(pass_lenght=12, 
                                   n_yrs=5, 
-                                  week_or_month="w", 
-                                  spec_char=c("$", "ง", "&", "!"))
+                                  week_or_month_or_days="m", 
+                                  spec_char=c("$", "ยง", "&", "!"))
 {
   n_days  <- 366
   n_weeks <- 52
@@ -21,9 +21,9 @@ my_password_generator <- function(pass_lenght=12,
   my_kw <- c(1:n_weeks)
   my_month <- c(1:n_month)
   
-  if(week_or_month=="w") {
+  if(week_or_month_or_days=="w") {
     my_pass_df <- data.frame(matrix(1:(n_weeks*n_years), n_weeks, n_years))
-  } else if(week_or_month=="m") { my_pass_df <- data.frame(matrix(1:(n_month*n_years), n_month, n_years)) }
+  } else if(week_or_month_or_days=="m") { my_pass_df <- data.frame(matrix(1:(n_month*n_years), n_month, n_years)) }
   else { my_pass_df <- data.frame(matrix(1:(n_days*n_years), n_days, n_years)) }
   
   years_name <- c()
@@ -31,7 +31,7 @@ my_password_generator <- function(pass_lenght=12,
   for(i in 1:(n_years-1)) { years_name[i+1] <- c(paste("year_", year(Sys.Date())+i, sep = ""))  }
   names(my_pass_df) <- years_name
   
-  if(week_or_month=="w") {
+  if(week_or_month_or_days=="w") {
     for(j in 1:n_years) {
       for (i in 1:n_weeks)
       {
@@ -42,7 +42,7 @@ my_password_generator <- function(pass_lenght=12,
     
     my_df_return <- cbind(data.frame(my_kw), my_pass_df)
     
-  } else if(week_or_month=="m") {
+  } else if(week_or_month_or_days=="m") {
     for(j in 1:n_years) {
       for (i in 1:n_month)
       {
