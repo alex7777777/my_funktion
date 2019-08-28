@@ -13,7 +13,7 @@ my_split_save <- function(col_to_split, delimiter="_") {
   max_numb_pos <- max(str_count(col_to_split, delimiter))+1
   
   # 2019-08-28 UPDATE
-  if(max_numb_pos>9) { max_numb_pos<-9 }
+  # if(max_numb_pos>9) { max_numb_pos<-9 }
   # 2019-08-28 UPDATE
   
   new_string_var <- data.frame(1:length(col_to_split))
