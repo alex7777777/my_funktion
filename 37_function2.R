@@ -30,9 +30,6 @@ write_to_DWH <- function(object, table_name) {
 
 
 
-
-
-
 # #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # #          MAIN SCRIPT            ~
 # #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -56,6 +53,13 @@ write_to_DWH <- function(object, table_name) {
 # options("warning.length"=8000)
 # options(scipen = 999)
 # 
+
+# # Store webservice keys and authentication details
+# # to write in 'RProfile' in 'C:\Users\R\R-3.5.1\library\base\R\RProfile':
+# Sys.setenv( TERA_USER = "my_orig_tera_user" )
+# Sys.setenv( TERA_PW = "my_orig_tera_pass" )
+
+
 # #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # #                DB Connection                   ~
 # #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
