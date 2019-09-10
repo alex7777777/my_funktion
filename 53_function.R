@@ -6,9 +6,11 @@
 # Generate SQL-Strings for Big Query survey
 
 my_sql_generator <- function(sql_typ_select, 
-                             date_fr,         # YYYY-MM-DD
+                             date_fr='2019-01-01',  # YYYY-MM-DD
                              days_to=7, 
-                             days_fr_past=15) { 
+                             days_fr_past=15,
+                             cw_number=104,
+                             sample_uuid=1000) { 
   
   date_to <- as.character(as.Date(date_fr) + days_to)
   date_fr_past <- as.character(as.Date(date_fr) - days_fr_past)
@@ -255,7 +257,58 @@ my_sql_generator <- function(sql_typ_select,
                                                       JOIN CIA.LU_D_PB_MA_EINSCHLUSS fc ON fc.MA_ID=t1.MA_ID
                                                       WHERE KAL_TAG_ID >= '", date_fr ,"'
                                                       AND KAL_TAG_ID < '", date_to ,"';
-                                                      ")
+                                                      "),
+                       
+                       "dwh_bp_sqa_segment_lab" =  paste0("SELECT * 
+                                                           FROM CIA.SD_BP_BASKET_PROFILE
+                                                           ORDER BY BP_BASKET_PROFILE_ID;
+                                                           "),
+                       
+                       "dwh_bp_sqa" =              paste0("CREATE VOLATILE TABLE Kundensample AS(
+                                                          SELECT
+                                                          pb_konto_nr_16
+                                                          ,w52_pb_facts_segment_l1_id_modal
+                                                          FROM CIA.S_PB_KUNDEN_DATAMART
+                                                          WHERE W52_ANZ_BON>0 AND AUSWERTBAR_KENZ=1 AND ABUSIVE=0
+                                                          AND w52_pb_facts_segment_l1_id_modal IN (1,2) --for loyal customers
+                                                          SAMPLE ", sample_uuid,"
+                                                          )WITH DATA
+                                                          UNIQUE PRIMARY INDEX(pb_konto_nr_16)
+                                                          ON COMMIT PRESERVE ROWS;
+                                                          
+                                                          CREATE VOLATILE TABLE steer_zeit AS(
+                                                          SELECT
+                                                          kal_tag_id
+                                                          FROM CIA.LU_D_KAL_TAG
+                                                          WHERE LOG_WO_OTW BETWEEN 1 AND ", cw_number, " --52 or 104 or 156 weeks
+                                                          )WITH DATA
+                                                          UNIQUE PRIMARY INDEX(kal_tag_id)
+                                                          ON COMMIT PRESERVE ROWS;
+                                                          
+                                                          COLLECT STATISTICS COLUMN(pb_konto_nr_16) ON Kundensample;
+                                                          COLLECT STATISTICS COLUMN(kal_tag_id) ON steer_zeit;
+
+                                                          DROP TABLE REWE_DIGITAL.TMP_OCMA_SQA;
+
+                                                          CREATE TABLE REWE_DIGITAL.TMP_OCMA_SQA AS (
+                                                          SELECT
+                                                          pb_konto_nr_16_bewegung
+                                                          ,t1.kal_tag_id
+                                                          ,t1.arbeitszeit_id --ohne 1 vorne es ist die Uhrzeit - z.B. 12023 bedeutet 20:23
+                                                          ,BP_BASKET_PROFILE_ID
+                                                          ,BON_W_UMS_BTO --ag: bon
+                                                          FROM CIA.S_BASKET_PROFILES t1
+                                                          JOIN CIA.H_PB_KONTO_KARTE_BEWEGUNG t2 ON t1.PB_KARTE_NR_16=t2.PB_KARTE_NR_16 AND t2.AUSWERTBAR_KENZ=1
+                                                          JOIN Kundensample t3 ON t2.pb_konto_nr_16_bewegung=t3.pb_konto_nr_16
+                                                          JOIN CIA.LU_D_PB_MA_EINSCHLUSS fc ON fc.MA_ID=t1.MA_ID
+                                                          JOIN steer_zeit fz ON fz.kal_tag_id=t1.kal_tag_id
+                                                          WHERE t1.KAL_TAG_ID >='", date_fr ,"' AND t1.KAL_TAG_ID < '", date_to ,"'
+                                                          )WITH DATA;
+                                                          "),
+                       
+                       "bp_sqa_read" =             paste0("SELECT * FROM REWE_DIGITAL.TMP_OCMA_SQA 
+                                                          ORDER BY pb_konto_nr_16_bewegung, kal_tag_id;
+                                                          ")
                        
                        )
   
