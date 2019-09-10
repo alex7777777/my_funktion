@@ -270,8 +270,8 @@ my_sql_generator <- function(sql_typ_select,
                                                           ,w52_pb_facts_segment_l1_id_modal
                                                           FROM CIA.S_PB_KUNDEN_DATAMART
                                                           WHERE W52_ANZ_BON>0 AND AUSWERTBAR_KENZ=1 AND ABUSIVE=0
-                                                          AND w52_pb_facts_segment_l1_id_modal IN (1,2) --fuer Loyalen Kunden
-                                                          SAMPLE ", sample_uuid," --10000
+                                                          AND w52_pb_facts_segment_l1_id_modal IN (1,2) --for loyal customers
+                                                          SAMPLE ", sample_uuid,"
                                                           )WITH DATA
                                                           UNIQUE PRIMARY INDEX(pb_konto_nr_16)
                                                           ON COMMIT PRESERVE ROWS;
