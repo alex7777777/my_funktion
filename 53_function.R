@@ -270,8 +270,8 @@ my_sql_generator <- function(sql_typ_select,
                                                           ,w52_pb_facts_segment_l1_id_modal
                                                           FROM CIA.S_PB_KUNDEN_DATAMART
                                                           WHERE W52_ANZ_BON>0 AND AUSWERTBAR_KENZ=1 AND ABUSIVE=0
-                                                          AND w52_pb_facts_segment_l1_id_modal IN (1,2) --for loyal customers
-                                                          SAMPLE ", sample_uuid,"
+                                                          AND w52_pb_facts_segment_l1_id_modal IN (1,2) --fuer Loyalen Kunden
+                                                          SAMPLE ", sample_uuid," --10000
                                                           )WITH DATA
                                                           UNIQUE PRIMARY INDEX(pb_konto_nr_16)
                                                           ON COMMIT PRESERVE ROWS;
@@ -280,7 +280,7 @@ my_sql_generator <- function(sql_typ_select,
                                                           SELECT
                                                           kal_tag_id
                                                           FROM CIA.LU_D_KAL_TAG
-                                                          WHERE LOG_WO_OTW BETWEEN 1 AND ", cw_number, " --52 or 104 or 156 weeks
+                                                          WHERE LOG_WO_OTW BETWEEN 1 AND ", cw_number, " --52 or 104 or 156
                                                           )WITH DATA
                                                           UNIQUE PRIMARY INDEX(kal_tag_id)
                                                           ON COMMIT PRESERVE ROWS;
@@ -306,7 +306,7 @@ my_sql_generator <- function(sql_typ_select,
                                                           )WITH DATA;
                                                           "),
                        
-                       "bp_sqa_read" =             paste0("SELECT * FROM REWE_DIGITAL.TMP_OCMA_SQA 
+                       "dwh_bp_sqa_read" =          paste0("SELECT * FROM REWE_DIGITAL.TMP_OCMA_SQA 
                                                           ORDER BY pb_konto_nr_16_bewegung, kal_tag_id;
                                                           ")
                        
