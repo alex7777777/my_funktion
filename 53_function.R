@@ -243,7 +243,19 @@ my_sql_generator <- function(sql_typ_select,
                                                             AND RO_ORDER_KAL_TAG_ID >= '", date_fr ,"'
                                                             AND RO_ORDER_KAL_TAG_ID < '", date_to ,"'
                                                             AND RO_GLOBAL_ORDER_ID NOT LIKE 'Z-ZZZ-ZZZ-ZZZ';
-                                                            ")
+                                                            "),
+                       
+                       "dwh_bp_sqa_segment" =  paste0("SELECT PB_KONTO_NR_16_BEWEGUNG
+                                                      , t1.kal_tag_id
+                                                      , t1.arbeitszeit_id --ohne 1 vorne es ist die Uhrzeit - z.B. 12023 bedeutet 20:23
+                                                      , BP_BASKET_PROFILE_ID
+                                                      , BON_W_UMS_BTO
+                                                      FROM CIA.S_BASKET_PROFILES t1
+                                                      JOIN CIA.H_PB_KONTO_KARTE_BEWEGUNG t2 ON t1.PB_KARTE_NR_16=t2.PB_KARTE_NR_16 AND t2.AUSWERTBAR_KENZ=1
+                                                      JOIN CIA.LU_D_PB_MA_EINSCHLUSS fc ON fc.MA_ID=t1.MA_ID
+                                                      WHERE KAL_TAG_ID >= '", date_fr ,"'
+                                                      AND KAL_TAG_ID < '", date_to ,"';
+                                                      ")
                        
                        )
   
