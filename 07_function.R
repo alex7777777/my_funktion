@@ -6,6 +6,8 @@
 #######################################################
 
 library(TraMineR)
+library(htmlwidgets)
+library(data.table)
 
 # Function: transition matrix
 my_transition_matrix <- function(transitMatrix) {
