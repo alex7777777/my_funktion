@@ -1,8 +1,7 @@
 # Here are my public R functions for preparing and analyzing CRM data 
  
- CRM Customer Journey Analysis 
- 
- Erstellt von Alex Gorbach 
+## CRM Customer Journey Analysis 
+ _Erstellt von Alex Gorbach_
  
  Alle hier beschriebenen Funktionen stehen auf GutHub zur Verfügung. Um sie nutzen zu können, sollte im Anfang des R-Skripts eine Zugrifffunktion eingegeben warden: 
  
