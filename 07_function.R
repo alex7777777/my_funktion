@@ -5,6 +5,8 @@
 # http://data.deutschebahn.com/dataset/data-flinkster
 #######################################################
 
+library(TraMineR)
+
 # Function: transition matrix
 my_transition_matrix <- function(transitMatrix) {
   
