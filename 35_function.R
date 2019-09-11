@@ -8,6 +8,13 @@
 # Function: GLM for select a time class
 # Selecting only training my_rawdata
 
+# Get all my functions
+get_all_my_function  <- function(funct_name) {
+  url_my_function <- "https://raw.githubusercontent.com/alex7777777/my_funktion/master/"
+  source(url(paste0(url_my_function, funct_name)))
+  closeAllConnections()
+}
+
 my_glm_for_time_class <- function(my_rawdata,
                                   SELECTED_TIME_CLASS,
                                   NUMBERTIMECLASSES=20,
@@ -30,12 +37,12 @@ my_glm_for_time_class <- function(my_rawdata,
   # }
   
   # Time difference function
-  source("my_function/05_function.R")
+  get_all_my_function("05_function.R")
   my_rawdata$delta_t <- my_time_diff(my_rawdata$ids, my_rawdata$Datum)
 
   # Automatical generate Time Classes
   # Time distribution
-  source("my_function/11_function.R")
+  get_all_my_function("11_function.R")
   time_class_objects <- my_time_classes_generator(my_rawdata$delta_t, NUMBERTIMECLASSES)
   
   time_class_list <- time_class_objects$time_class_list
@@ -47,7 +54,7 @@ my_glm_for_time_class <- function(my_rawdata,
   cat(paste0("Recode time difference to time classes.\n", 
              "Current select time class number: ", SELECTED_TIME_CLASS, sep = "\n"))
   
-  source("my_function/12_function.R")
+  get_all_my_function("12_function.R")
   my_rawdata$delta_t <- my_time_classes_recode(my_rawdata$ids, 
                                                my_rawdata$delta_t, 
                                                time_class_list[[SELECTED_TIME_CLASS]])
@@ -55,7 +62,7 @@ my_glm_for_time_class <- function(my_rawdata,
   
   # # cj_df_07 <<< cj_df
   
-  # source("my_function/18_function.R")
+  # get_all_my_function("18_function.R")
   # my_rawdata_dm <- my_help_var(my_rawdata[,1:3])
   # head(my_rawdata_dm)
   # table(my_rawdata_dm$rent_2017)
@@ -72,10 +79,10 @@ my_glm_for_time_class <- function(my_rawdata,
   raw_data <- my_rawdata[my_rawdata$Datum < as.POSIXct(DEADLINE), ]
   
   # Sequencing raw data
-  source("my_function/06_function.R")
+  get_all_my_function("06_function.R")
   data_seq <- my_data_sequencing(raw_data, 1) # 1=LENGTHFROM
   
-  source("my_function/13_function.R")
+  get_all_my_function("13_function.R")
   sq_df <- my_pattern_df(data_seq)
   
   length(unique(sq_df$ids))
@@ -94,7 +101,7 @@ my_glm_for_time_class <- function(my_rawdata,
   
   if(min(table(my_rawdata_dm[ , TARGET_VAR])) / sum(table(my_rawdata_dm[ , TARGET_VAR])) <= 0.05) {
     # Balanced sample 50% vs. 50%
-    source("my_function/21_function.R")
+    get_all_my_function("21_function.R")
     my_rawdata_dm <- my_balanced_sample(TARGET_VAR, my_rawdata_dm)
     print("The sample was balanced")
   } else {
@@ -102,7 +109,7 @@ my_glm_for_time_class <- function(my_rawdata,
   }
   
   # Preparation of independent variable sets
-  source("my_function/22_function.R")
+  get_all_my_function("22_function.R")
   library(stringr)
   independ_var_list <- my_independ_var_set(my_rawdata_dm, TARGET_VAR, 3) # "3": SET3 for all predictors
   
@@ -110,13 +117,13 @@ my_glm_for_time_class <- function(my_rawdata,
   # https://www.statmethods.net/stats/rdiagnostics.html
   
   # check the alias problem
-  source("my_function/28_function.R")
+  get_all_my_function("28_function.R")
   independ_var_list
   # my_check_alias(TARGET_VAR, my_rawdata_dm, independ_var_list, F)
   independ_var_list <- my_check_alias(TARGET_VAR, my_rawdata_dm, independ_var_list)
   
   # Multicollinearity problem
-  source("my_function/23_function.R")
+  get_all_my_function("23_function.R")
   print(paste0("Length of the independed variable list before cleaning: ", length(independ_var_list)))
   # my_multicoll_rm(TARGET_VAR, my_rawdata_dm, independ_var_list, 3.9, T)
   independ_var_list <- my_multicoll_rm(TARGET_VAR, my_rawdata_dm, independ_var_list)
@@ -164,12 +171,12 @@ my_glm_for_time_class <- function(my_rawdata,
 #   }
 #   
 #   # Time difference function
-#   source("my_function/05_function.R")
+#   get_all_my_function("05_function.R")
 #   my_rawdata$delta_t <- my_time_diff(my_rawdata$ids, my_rawdata$Datum)
 #   
 #   # Automatical generate Time Classes
 #   # Time distribution
-#   source("my_function/11_function.R")
+#   get_all_my_function("11_function.R")
 #   time_class_objects <- my_time_classes_generator(my_rawdata$delta_t, NUMBERTIMECLASSES)
 #   
 #   time_class_list <- time_class_objects$time_class_list
@@ -178,7 +185,7 @@ my_glm_for_time_class <- function(my_rawdata,
 #   cat(paste0("Recode time difference to time classes.\n", 
 #              "Current select time class number: ", SELECTED_TIME_CLASS, sep = "\n"))
 #   
-#   source("my_function/12_function.R")
+#   get_all_my_function("12_function.R")
 #   my_rawdata$delta_t <- my_time_classes_recode(my_rawdata$ids, 
 #                                                my_rawdata$delta_t, 
 #                                                time_class_list[[SELECTED_TIME_CLASS]])
@@ -187,17 +194,17 @@ my_glm_for_time_class <- function(my_rawdata,
 #   # cj_df_07 <<< cj_df
 #   # my_rawdata_dm <- data.frame()
 #   
-#   source("my_function/18_function.R")
+#   get_all_my_function("18_function.R")
 #   my_rawdata_dm <- my_help_var(my_rawdata[,1:3])
 #   
 #   # Pattern data frame for the time interval 01.01.2014-31.12.2016
 #   raw_data <- my_rawdata[my_rawdata$Datum < as.POSIXct(DEADLINE), ]
 #   
 #   # Sequencing raw data
-#   source("my_function/06_function.R")
+#   get_all_my_function("06_function.R")
 #   data_seq <- my_data_sequencing(raw_data, 1) # 1=LENGTHFROM
 #   
-#   source("my_function/13_function.R")
+#   get_all_my_function("13_function.R")
 #   sq_df <- my_pattern_df(data_seq)
 #   
 #   library(plyr)
@@ -214,7 +221,7 @@ my_glm_for_time_class <- function(my_rawdata,
 #   
 #   if(min(table(my_rawdata_dm[ , TARGET_VAR])) / sum(table(my_rawdata_dm[ , TARGET_VAR])) <= 0.05) {
 #     # Balanced sample 50% vs. 50%
-#     source("my_function/21_function.R")
+#     get_all_my_function("21_function.R")
 #     my_rawdata_dm <- my_balanced_sample(TARGET_VAR, my_rawdata_dm)
 #     print("The sample was balanced")
 #   } else {
@@ -222,7 +229,7 @@ my_glm_for_time_class <- function(my_rawdata,
 #   }
 #   
 #   # Preparation of independent variable sets
-#   source("my_function/22_function.R")
+#   get_all_my_function("22_function.R")
 #   library(stringr)
 #   indep_var_list <- my_independ_var_set(my_rawdata_dm, TARGET_VAR, 3) # "3": SET3 for all predictors
 #   
@@ -230,14 +237,14 @@ my_glm_for_time_class <- function(my_rawdata,
 #   # https://www.statmethods.net/stats/rdiagnostics.html
 #   
 #   # check the alias problem
-#   source("my_function/28_function.R")
+#   get_all_my_function("28_function.R")
 #   print(indep_var_list)
 #   # my_check_alias(TARGET_VAR, my_rawdata_dm, indep_var_list, F)
 #   indep_var_list <- my_check_alias(TARGET_VAR, my_rawdata_dm, indep_var_list)
 #   print(indep_var_list)
 #   
 #   # Multicollinearity problem
-#   source("my_function/23_function.R")
+#   get_all_my_function("23_function.R")
 #   print(paste0("Length of the independed variable list before cleaning: ", length(indep_var_list)))
 #   # my_multicoll_rm(TARGET_VAR, my_rawdata_dm, indep_var_list, 3.9, T)
 #   indep_var_list <- my_multicoll_rm(TARGET_VAR, my_rawdata_dm, indep_var_list)
