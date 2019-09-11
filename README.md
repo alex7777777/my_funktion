@@ -1,13 +1,8 @@
-# my_funktion
-
-## Here are my public R functions for preparing and analyzing CRM data. 
+# Here are my public R functions for preparing and analyzing CRM data 
  
  CRM Customer Journey Analysis 
- Erstellt von Alex Gorbach 
  
- Abkürzungen 
- CJ – Customer Journey 
- DF – Data Frame 
+ Erstellt von Alex Gorbach 
  
  Alle hier beschriebenen Funktionen stehen auf GutHub zur Verfügung. Um sie nutzen zu können, sollte im Anfang des R-Skripts eine Zugrifffunktion eingegeben warden: 
  
