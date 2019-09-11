@@ -9,8 +9,14 @@
 # RULE 1. If many same events occurred on the same day, 
 #         only one event should be left
 
+get_all_my_function  <- function(funct_name) {
+  url_my_function <- "https://raw.githubusercontent.com/alex7777777/my_funktion/master/"
+  source(url(paste0(url_my_function, funct_name)))
+  closeAllConnections()
+}
+
 my_one_event_day_rule <- function(my_df) {
-  source("my_function/05_function.R")
+  get_all_my_function("05_function.R")
   my_df$delta_t <- my_time_diff(my_df$ids, my_df$Datum, F)
   line_befor <- paste0("The number of lines befor remove: ", nrow(my_df))
   
