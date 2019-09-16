@@ -34,13 +34,13 @@ my_time_diff <- function(df_ids, df_date, scaling_time="") {
   } else if(scaling_time == "d") {
     my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/24))                      # days
   } else if(scaling_time == "w") {
-    my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/(24*7), digits = 2))      # week
+    my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/(24*7), digits = 1))      # week
   } else if(scaling_time == "m") {
-    my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/(24*30.5), digits = 2))   # month
+    my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/(24*30.5), digits = 1))   # month
   } else if(scaling_time == "q") {
-    my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/(24*3*30.5), digits = 2)) # quarter
+    my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/(24*3*30.5), digits = 1)) # quarter
   } else if(scaling_time == "y") {
-    my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/(24*365.25), digits = 2)) # year
+    my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/(24*365.25), digits = 1)) # year
   } else {
     my_df$delta_t <- 1
     print("The time difference for other formats is not defined here: dummy time")
