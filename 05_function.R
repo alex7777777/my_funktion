@@ -30,9 +30,9 @@ my_time_diff <- function(df_ids, df_date, scaling_time="") {
   } else if(scaling_time == "M") {
     my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)*60))                      # min
   } else if(scaling_time == "H") {
-    my_df$delta_t <- as.numeric(round(my_df$t2 - my_df$Datum, digits = 1))               # hour
+    my_df$delta_t <- as.numeric(round(my_df$t2 - my_df$Datum))                           # hour
   } else if(scaling_time == "d") {
-    my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/24, digits = 1))          # days
+    my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/24))                      # days
   } else if(scaling_time == "w") {
     my_df$delta_t <- as.numeric(round((my_df$t2 - my_df$Datum)/(24*7), digits = 2))      # week
   } else if(scaling_time == "m") {
