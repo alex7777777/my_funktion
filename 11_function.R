@@ -10,7 +10,7 @@
 my_time_classes_generator <- function(time_difference_variable, 
                                       NumberDeltaTimeClasses=10) {
   
-  time_df <- data.frame(delta_t = round(quantile(time_difference_variable,  probs = c(1:100)/100, na.rm = TRUE),1),
+  time_df <- data.frame(delta_t = round(quantile(time_difference_variable,  probs = c(1:100)/100, na.rm = TRUE)),
                         Quantile_DayDiff = rownames(data.frame(quantile(time_difference_variable,  probs = c(1:100)/100, na.rm = TRUE)))
   )
   rownames(time_df) <- NULL
