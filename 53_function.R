@@ -321,6 +321,7 @@ my_sql_generator <- function(sql_typ_select,
                                                            WHERE CONTACT_DT >='", date_fr ,"' 
                                                            AND CONTACT_DT < '", date_to ,"' 
                                                            AND eigenakquiriert_kenz = 0
+                                                           AND PB_KONTO_NR_16 IN (SELECT * FROM CIA.TMP_SAMPL_CCA)
                                                            ORDER BY PB_KONTO_NR_16, CONTACT_DT
                                                           ;")
                        
