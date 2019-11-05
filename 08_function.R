@@ -1,5 +1,5 @@
 #######################################################
-# 2018-01-29 - by Alex Gorbach / Svens Korrectur 26-02
+# 2018-01-29 - by Alex Gorbach / Update 2019-11-05
 # DB Datensatz Carsharing - Flinkster
 # Buchungen Carsharing 
 # http://data.deutschebahn.com/dataset/data-flinkster
@@ -17,17 +17,21 @@ get_all_my_function  <- function(funct_name) {
 
 my_one_event_day_rule <- function(my_df) {
   get_all_my_function("05_function.R")
-  my_df$delta_t <- my_time_diff(my_df$ids, my_df$Datum, F)
-  line_befor <- paste0("The number of lines befor remove: ", nrow(my_df))
+  my_df$delta_t <- round(my_time_diff(my_df$ids, my_df$Datum, "d"))
+  line_befor <- nrow(my_df)
   
-  # removal of double-rend in one day
-  my_df <- my_df[my_df$delta_t != 0, ]
-  my_df <- na.omit(my_df)
+  my_df$event2 <- my_df$event[2:(nrow(my_df)+1)]
   
-  print(line_befor)
-  print(paste0("The number of lines after deletion: ", nrow(my_df)))
+  select_rows_to_delete <- rownames(my_df[(my_df$event == my_df$event2) & (my_df$delta_t==0) & (!is.na(my_df$delta_t)),])
   
-  return(my_df)
+  # removal of one-day-double
+  '%ni%' <- Negate('%in%')
+  my_df <- my_df[rownames(my_df) %ni% select_rows_to_delete, ]
+  
+  cat(paste0("The number of lines befor remove: ", line_befor, "\n",
+             "The number of lines after deletion: ", nrow(my_df)))
+  
+  return(my_df[,1:3])
 }
 
 svens_one_event_day_rule <- function(data, 
@@ -50,7 +54,7 @@ svens_one_event_day_rule <- function(data,
   {
     #Remove duplicate combinations of ids and date / output only the standard variables
     data <- data[!duplicated(data[,c("ids","date")]), c("ids", "Datum","event")]
-  }else 
+  } else 
   {
     #Remove duplicate combinations of ids, date and event / output only the standard variables
     data <- data[!duplicated(data[,c("ids","date","event")]), c("ids", "Datum","event")]
@@ -60,4 +64,3 @@ svens_one_event_day_rule <- function(data,
   
   return(data)
 }
-
