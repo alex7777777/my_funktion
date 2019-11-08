@@ -14,11 +14,7 @@ my_sequences_cutting <- function(DF, cut_seq_event="Kauf") {
   
   # Step 2: loop
   for(i in 1:length(unique(DF$ids))) { 
-    
-    if(length(unique(DF$ids))>0) {
-      cat(paste0(round(100*length(unique(DF$ids))/(1+length(unique(DF$ids))-i)), "%"))
-    }
-    
+        
     DF2 <- DF[DF$ids %in% ids_vector[i], ]
     
     # Delete sale-duplicates 'cut_seq_event' in one identifier
