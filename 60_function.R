@@ -5,7 +5,7 @@
 # Function: cutting sequences into parts ending with the selected event 
 #           Usually this is a dependent variable 'purchase'
 
-my_sequences_cutting <- function(DF, depend_var_name) {
+my_sequences_cutting <- function(DF, cut_seq_event="Kauf") {
   
   # Step 1: set int. parameter
   ids_vector <- unique(DF$ids)
@@ -21,18 +21,18 @@ my_sequences_cutting <- function(DF, depend_var_name) {
     
     DF2 <- DF[DF$ids %in% ids_vector[i], ]
     
-    # Delete sale-duplicates 'depend_var_name' in one identifier
+    # Delete sale-duplicates 'cut_seq_event' in one identifier
     DF2$event2[2:nrow(DF2)] <- DF2$event[1:(nrow(DF2)-1)]
-    DF2 <- DF2[!((DF2$event==DF2$event2)&(DF2$event==depend_var_name)&(!is.na(DF2$event2))), ]
-    if(DF2[1, ]$event==depend_var_name) { DF2 <- DF2[2:nrow(DF2), ]}
+    DF2 <- DF2[!((DF2$event==DF2$event2)&(DF2$event==cut_seq_event)&(!is.na(DF2$event2))), ]
+    if(DF2[1, ]$event==cut_seq_event) { DF2 <- DF2[2:nrow(DF2), ]}
     
     DF2$event2 <- NULL
     
-    if(depend_var_name %in% DF2$event) {
-      DF2[DF2$event==depend_var_name,]$delta_t <- NA
+    if(cut_seq_event %in% DF2$event) {
+      DF2[DF2$event==cut_seq_event,]$delta_t <- NA
       DF2$new_ids <- rownames(DF2)
       DF2$new_ids <- paste0(DF2$new_ids, "_", DF2$ids)
-      DF2[DF2$event!=depend_var_name,]$new_ids <- NA
+      DF2[DF2$event!=cut_seq_event,]$new_ids <- NA
     } else {
       DF2$new_ids[nrow(DF2)] <-  paste0(rownames(DF2)[nrow(DF2)], "_", DF2$ids[nrow(DF2)])
     }
@@ -45,7 +45,6 @@ my_sequences_cutting <- function(DF, depend_var_name) {
     DF <- rbind(DF, DF2)
     
   }
-  # End loop
   
   # Select new sequences
   DF <- DF[!is.na(DF$new_ids), ]
@@ -58,12 +57,9 @@ my_sequences_cutting <- function(DF, depend_var_name) {
   # save_ids_matching <- save_ids_matching[order(save_ids_matching$ids, save_ids_matching$new_ids), ]
   # save(save_ids_matching, file = "save_ids_matching.RObject")
   
-  # Return DF
   DF <- DF[ , c("ids", "new_ids", "Datum", "event", "delta_t")]
   names(DF) <- c("old_ids", "ids", "Datum", "event", "delta_t")
-  # end
   
-
   return(DF)
 }
 
@@ -95,8 +91,6 @@ fillNAgaps <- function(x, firstBack=FALSE) {
   # If it was originally a factor, convert it back
   if (!is.null(lvls)) {
     x <- factor(x, levels=seq_along(lvls), labels=lvls)
-  }
-  
+  }  
   x
 }
-
