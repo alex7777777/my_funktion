@@ -316,11 +316,12 @@ my_sql_generator <- function(sql_typ_select,
                                                            ,arbeitszeit_id
                                                            ,Event
                                                            ,Bon_W_UMS_bto 
-                                                           --,eigenakquiriert_kenz
+                                                           ,eigenakquiriert_kenz
+                                                           ,W52_PB_FACTS_SEGMENT_L1_ID_MODAL
                                                            FROM CIA.cia_PD_Sequenzmusteranalyse
                                                            WHERE CONTACT_DT >='", date_fr ,"' 
                                                            AND CONTACT_DT < '", date_to ,"' 
-                                                           AND eigenakquiriert_kenz = 0
+                                                           --AND eigenakquiriert_kenz = 0
                                                            AND PB_KONTO_NR_16 IN (SELECT * FROM CIA.TMP_SAMPL_CCA)
                                                            ORDER BY PB_KONTO_NR_16, CONTACT_DT
                                                           ;")
