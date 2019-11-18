@@ -21,7 +21,7 @@ my_repeating_reduction <- function(my_sqa, event_reduct="") {
   my_sqa$event3[1] <- ""
   
   # default: reduction of all recurring events
-  if(event_retuct == "") {
+  if(event_reduct == "") {
     my_sqa <- my_sqa[!((my_sqa$event==my_sqa$event2)
                        &(my_sqa$event==my_sqa$event3)), ]
   } else {
