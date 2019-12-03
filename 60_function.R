@@ -18,7 +18,7 @@ my_sequences_cutting <- function(DF, cut_seq_event="Kauf", save_Y_N="Y") {
   DF$new_ids <- NA
   t <- rep("=", length_uniq_id)
   
-  cut("\n")
+  cat("\n")
   # Step 2: loop
   for(i in 1:length_uniq_id) { 
     
