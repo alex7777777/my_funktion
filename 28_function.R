@@ -13,7 +13,7 @@ my_check_alias <- function(dep_var_char, my_df, indep_var_list, ALIASED_REMOVE=T
   #                            data=my_df[ , indep_var_list] ))
   
   # Remove alias predictors
-  mod_alias_check <- lm(my_df[ , dep_var_char]~ . ,
+  mod_alias_check <- lm(unlist(my_df[ , dep_var_char])~ . ,
                         data=my_df[ , indep_var_list])
   mod_alias_check_out <- data.frame(is.na(coef(mod_alias_check)))
   mod_alias_check_out$aliased_var <- rownames(mod_alias_check_out)
