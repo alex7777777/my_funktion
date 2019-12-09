@@ -5,10 +5,18 @@
 # http://data.deutschebahn.com/dataset/data-flinkster
 #######################################################
 
+my_check_alias("sales_growth", modeling_df, 2:ncol(modeling_df))
+
+dep_var_char <- "sales_growth"
+my_df <- modeling_df
+indep_var_list <- 2:ncol(modeling_df)
+
+
+
 # Function: Сhecking and deleting aliased variables
 
 my_check_alias <- function(dep_var_char, my_df, indep_var_list, ALIASED_REMOVE=T) {
-
+  
   # my_df_alias <- alias(lm(my_df[ , dep_var_char]~ . ,
   #                            data=my_df[ , indep_var_list] ))
   
@@ -24,17 +32,18 @@ my_check_alias <- function(dep_var_char, my_df, indep_var_list, ALIASED_REMOVE=T
   remove_var_list <- mod_alias_check_out[mod_alias_check_out$aliased_y_n==T, ]$aliased_var
   remove_var_list <- gsub("`", "", remove_var_list)
   remove_var_list_nr <- c()
-  for(i in 1:length(remove_var_list)) {
-    remove_var_list_nr <- c(remove_var_list_nr, grep(remove_var_list[i], colnames(my_df)))
-  }
-  
-  print("Deleting variables: ")
-  print(paste0(remove_var_list_nr, ". ", remove_var_list, collapse=cat("\n")))
-  
-  # Remove aliased variables
-  if(ALIASED_REMOVE) {
-    indep_var_list <- indep_var_list[!(indep_var_list %in% remove_var_list_nr)]
-  }
+  if(length(remove_var_list) > 0) {
+    for(i in 1:length(remove_var_list)) {
+      remove_var_list_nr <- c(remove_var_list_nr, grep(remove_var_list[i], colnames(my_df)))
+      print("Deleting variables:\n")
+      print(paste0(remove_var_list_nr, ". ", remove_var_list, collapse=cat("\n")))
+      
+      # Remove aliased variables
+      if(ALIASED_REMOVE) {
+        indep_var_list <- indep_var_list[!(indep_var_list %in% remove_var_list_nr)]
+      }
+    }
+  } else { stop("No aliased variables") }
   
   return(indep_var_list)
 }
