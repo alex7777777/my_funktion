@@ -5,14 +5,6 @@
 # http://data.deutschebahn.com/dataset/data-flinkster
 #######################################################
 
-my_check_alias("sales_growth", modeling_df, 2:ncol(modeling_df))
-
-dep_var_char <- "sales_growth"
-my_df <- modeling_df
-indep_var_list <- 2:ncol(modeling_df)
-
-
-
 # Function: Сhecking and deleting aliased variables
 
 my_check_alias <- function(dep_var_char, my_df, indep_var_list, ALIASED_REMOVE=T) {
