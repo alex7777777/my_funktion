@@ -191,5 +191,7 @@ my_pattern_df <- function(data_seq,
   
   gc(reset = TRUE)
   
+  rownames(df_to_smartdata) <- NULL
+  
   return(df_to_smartdata)
 }
