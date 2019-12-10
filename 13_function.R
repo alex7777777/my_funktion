@@ -10,14 +10,14 @@
 
 my_pattern_df <- function(data_seq, 
                           SUPPORT1er=0.00000001,
-                          SUPPORT2er=0.0025,
-                          SUPPORT3er=0.0035,
+                          SUPPORT2er=0.004,
+                          SUPPORT3er=0.006,
                           TOP_n_1er=40,
-                          TOP_n_2er=80,
-                          TOP_n_3er=30,
+                          TOP_n_2er=50,
+                          TOP_n_3er=20,
                           SUPPORT_OR_TOP=T) {
   
-  # gc(TRUE)
+  gc(reset = TRUE)
   
   data_seq_head <- data_seq[,1:2]
   data_seq <- data_seq[,-(1:2)]
@@ -54,11 +54,17 @@ my_pattern_df <- function(data_seq,
   
   events_big[1:length(events_big)]
   
+  # if(SUPPORT_OR_TOP) {
+  #   events_small <- events_big[events_big >= SUPPORT1er]
+  # } else {
+  #   events_small <- events_big[1:TOP_n_1er]
+  # }
+  
   if(SUPPORT_OR_TOP) {
     events_small <- events_big[events_big >= SUPPORT1er]
-  } else {
+  } else if(TOP_n_1er < length(events_big)) {
     events_small <- events_big[1:TOP_n_1er]
-  }
+  } else { events_small <- events_big[1:length(events_big)] }
   
   events_names <- row.names(events_small)
   unique_seq_1 <- sort(events_names)
@@ -183,7 +189,7 @@ my_pattern_df <- function(data_seq,
   
   df_to_smartdata$lght <- (df_to_smartdata$lght+1)/2
   
-  # gc(reset = TRUE)
+  gc(reset = TRUE)
   
   return(df_to_smartdata)
 }
