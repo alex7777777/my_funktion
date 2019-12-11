@@ -1,11 +1,11 @@
 #######################################################
 # 2018-01-29 - by Alex Gorbach
-# DB Datensatz Carsharing - Flinkster
+# Datenbasis: DB Carsharing - Flinkster
 # Buchungen Carsharing 
 # http://data.deutschebahn.com/dataset/data-flinkster
 #######################################################
 
-# Function: Multi-collinearity problem
+# Function: Multicollinearity problem
 
 my_multicoll_rm <- function(dep_var_char, my_df, ind_var_list, break_value=5, MULTICOLL_REMOVE=T)  {
   
