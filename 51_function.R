@@ -6,7 +6,7 @@
 library(stringr)
 
 my_url_changeling <- function(url_string_vector) {
-  
+ 
   get_all_my_function  <- function(funct_name) {
     url_my_function <- "https://raw.githubusercontent.com/alex7777777/my_funktion/master/"
     source(url(paste0(url_my_function, funct_name)))
