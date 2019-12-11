@@ -5,7 +5,7 @@
 # http://data.deutschebahn.com/dataset/data-flinkster
 #######################################################
 
-# Function: Samplng function
+# Function: Sampling function
 # before start: rownames(my_df) <- NULL
 
 my_sampling_function <- function(row_vector,
