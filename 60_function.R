@@ -102,3 +102,4 @@ fillNAgaps <- function(x, firstBack=FALSE) {
   }
   x
 }
+ 
