@@ -2,7 +2,7 @@
 # 2019-08-27 - by Alex Gorbach                                             #
 # Passwords generator                                                       #
 # ######################################################################## #
-
+ 
 my_password_generator <- function(pass_lenght=12, 
                                   n_yrs=5, 
                                   week_or_month_or_days="m", 
