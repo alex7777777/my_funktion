@@ -1,6 +1,6 @@
 #######################################################
 # 2018-01-29 - by Alex Gorbach
-# DB Datensatz Carsharing - Flinkster
+# Datenbasis: DB Carsharing - Flinkster
 # Buchungen Carsharing 
 # http://data.deutschebahn.com/dataset/data-flinkster
 #######################################################
