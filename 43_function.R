@@ -1,6 +1,6 @@
 # ######################################################################## #
 # 2019-05-27 - by Alex Gorbach                                             #
-# Log file for check number of ids in data frame                           #
+# Log file for check number of IDs in data frame                           #
 # ######################################################################## #
 
 library(dplyr)
