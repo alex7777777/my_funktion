@@ -1,11 +1,11 @@
 #######################################################
 # 2018-03-07 - by Alex Gorbach
-# DB Datensatz Carsharing - Flinkster
+# Datenbasis: DB Carsharing - Flinkster
 # Buchungen Carsharing 
 # http://data.deutschebahn.com/dataset/data-flinkster
 #######################################################
 
-# Function: # Balanced sample
+# Function: Balanced sample
 # (only for binary dependet variable as dummy)
 
 my_balanced_sample <- function(my_dummy_vector_name, my_df, my_ids_name) {
