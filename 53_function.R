@@ -4,7 +4,7 @@
 # ######################################################################## #
 
 # Generate SQL-Strings for Big Query survey
-
+ 
 my_sql_generator <- function(sql_typ_select, 
                              date_fr='2019-01-01',  # YYYY-MM-DD
                              days_to=7, 
