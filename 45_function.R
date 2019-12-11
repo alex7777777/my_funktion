@@ -42,6 +42,4 @@ my_ellipse_corr_img <- function(corr_df, main_header="Predictor correlations")
 
   # # or, drop the diagonal and numbers
   # my_ellipse_corr(corr_df, col=colors[((corr_df + 1)/2) * 100], upper.panel="none", mar=c(0,2,0,0), main=main_header)
-  
-
 }
