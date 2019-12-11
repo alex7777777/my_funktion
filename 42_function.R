@@ -1,7 +1,7 @@
 # ######################################################################## #
 # 2019-03-10 - by Alex Gorbach                                             #
 # It makes a lot of binary variables from the nominal or factor variables  #
-# including empty and missing values                                       #
+# including empty and missing values                                      #
 # ######################################################################## #
 
 my_nominal_to_binary <- function(nominal_feature_as_list, 
