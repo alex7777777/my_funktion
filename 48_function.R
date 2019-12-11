@@ -7,7 +7,7 @@
 library(stringr)
 library(rlang)
 library(tidyr)
-
+ 
 my_split_save <- function(col_to_split, delimiter="_") {
   
   max_numb_pos <- max(str_count(col_to_split, delimiter))+1
