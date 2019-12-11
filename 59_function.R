@@ -3,7 +3,7 @@
 #######################################################
 
 # Function: returning a vector with common elements
-
+ 
 my_common_id_seacher <- function(v1, v2) {
   
   v1 <- unique(v1)
