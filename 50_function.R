@@ -4,7 +4,7 @@
 # ######################################################################## #
 
 my_tree_distrib <- function(my_df_for_distr,	percentile_cutoff=1, select_event="", select_level_nr=1) {
-  
+ 
   if(select_event!="") {
     my_df_for_distr <- my_df_for_distr[my_df_for_distr[ , select_level_nr-1] == select_event, ]
   }
