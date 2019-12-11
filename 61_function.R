@@ -2,7 +2,7 @@
 # 2019-11-13 - by Alex Gorbach
 #######################################################
 
-# Function: heuristic rule.
+# Function: heuristic rule. 
 # The function finds more than two times repeating events and reduces them.
 # The same object is returned back, but only with the first and last event in repetitions.
 
