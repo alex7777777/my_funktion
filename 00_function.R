@@ -5,7 +5,7 @@
 # http://data.deutschebahn.com/dataset/data-flinkster
 #######################################################
 
-# Function: read raw data
+# Function: read of raw data
 
 my_read_rawdata_csv <- function(folder_for_raw_data, 
                                 SAVE_RAW_DATA=F, 
