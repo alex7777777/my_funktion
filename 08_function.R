@@ -1,11 +1,11 @@
 #######################################################
 # 2018-01-29 - by Alex Gorbach / Update 2019-11-05
-# DB Datensatz Carsharing - Flinkster
+# Datenbasis: DB Carsharing - Flinkster
 # Buchungen Carsharing 
 # http://data.deutschebahn.com/dataset/data-flinkster
 #######################################################
 
-# Function: one event during the day ()
+# Function: one event during the day
 # RULE 1. If many same events occurred on the same day, 
 #         only one event should be left
 
