@@ -2,7 +2,7 @@
 # ############################################################## #
 # Equal, max, last, first attribution / distribution computation #
 # ############################################################## #
- 
+
 library(dplyr)
 
 # attribution_calc <- function(att_004, label_for_att = "No label")
@@ -40,6 +40,3 @@ attribution_calc <- function(att_004)
 
   return(attribution_final)
   }
-
-
-
