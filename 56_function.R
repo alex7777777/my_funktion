@@ -50,7 +50,7 @@ my_segment_select <- function(my_df,
     my_df <- my_df[grepl('Web', my_df$web_vs_app) , ]
   } else if(f_webapp == 'APP') {
     my_df <- my_df[grepl('App', my_df$web_vs_app) , ]
-  }
+  } 
   
   return(my_df)
 }
