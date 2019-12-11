@@ -6,7 +6,7 @@
 # Save from active R-Objects
 
 allactiveobjects <- ls()
-
+ 
 my_save_activ_robjects <- function(save_selected_object=allactiveobjects, 
                                    date_from=NA, date_to=NA) 
 {
