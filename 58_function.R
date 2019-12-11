@@ -18,3 +18,4 @@ my_dates_generator <- function(date_from, days_number)
   
   return(day_list)
 }
+ 
