@@ -4,6 +4,8 @@
 # Source: https://hlplab.wordpress.com/                                    #
 # ######################################################################## #
 
+library(ellipse)
+
 my_ellipse_corr <- function(corr, outline = FALSE, col = "grey", 
                             upper.panel = c("ellipse", "number", "none"), 
                             lower.panel = c("ellipse", "number", "none"), 
@@ -13,10 +15,7 @@ my_ellipse_corr <- function(corr, outline = FALSE, col = "grey",
                           # xlab = "", ylab = "", asp = 1, cex.lab = par("cex.lab"), 
                             cex = 0.75 * par("cex"), mar = 0.1 + c(2, 2, 4, 2), ...)
                           # cex = 0.75 * par("cex"), mar = 0.1 + c(2, 2, 4, 2), ...)
-{
-  # install.packages("ellipse")
-  library(ellipse)
-  
+{  
   # this is a modified version of the plotcorr function from the ellipse package
   # this prints numbers and ellipses on the same plot but upper.panel and lower.panel changes what is displayed
   # diag now specifies what to put in the diagonal (numbers, ellipses, nothing)
