@@ -1,12 +1,12 @@
 #######################################################
 # 2018-01-29 - by Alex Gorbach
-# DB Datensatz Carsharing - Flinkster
+# Datenbasis: DB Carsharing - Flinkster
 # Buchungen Carsharing 
 # http://data.deutschebahn.com/dataset/data-flinkster
 #######################################################
 
 # Function: input substring DF for the modeling without time
-#           putput DF for the sankey diagram
+#           output DF for the sankey diagram
 
 my_input_for_sankey <- function(pattern_df, SUPPORT_SANKEY=0.00001) {
   
