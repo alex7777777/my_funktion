@@ -1,6 +1,6 @@
 #######################################################
-# 2019-07-23 - by Alex Gorbach
-# DB Zugriff - Adobe
+# 2019-07-23 - by Alex Gorbach                        #
+# DB Zugriff - Adobe                                  #
 #######################################################
 
 # Function: SQL-Access to the Adobe Analytics tables
