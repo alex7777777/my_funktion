@@ -1,6 +1,6 @@
 #################################################################################
 # Confidence intervals
-# Quelle: https://rpubs.com/aaronsc32/regression-confidence-prediction-intervals
+# Source: https://rpubs.com/aaronsc32/regression-confidence-prediction-intervals
 #################################################################################
 
 reg.conf.intervals <- function(x, y) {
