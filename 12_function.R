@@ -1,11 +1,11 @@
 #######################################################
 # 2018-01-29 - by Alex Gorbach
-# DB Datensatz Carsharing - Flinkster
+# Datenbasis: DB Carsharing - Flinkster
 # Buchungen Carsharing 
 # http://data.deutschebahn.com/dataset/data-flinkster
 #######################################################
 
-# Function: automatical recode time differences to the selected time class
+# Function: automatic overwriting of time differences in the selected time classes
 
 my_time_classes_recode <- function(ids, 
                                    time_difference_variable, 
