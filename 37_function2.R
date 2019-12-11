@@ -1,6 +1,6 @@
 #######################################################
-# 2019-09-02 - by Alex S, edit Alex G
-# DB Zugriff - Write Teradata Table into DWH
+# 2019-09-02 - by Alex S, edit Alex G                 #
+# DB Zugriff - Write Teradata Table into DWH          #
 #######################################################
 
 library(RJDBC)
