@@ -7,8 +7,8 @@
 
 # Function: read of raw data
 
-my_read_rawdata_csv <- function(folder_for_raw_data, 
-                                SAVE_RAW_DATA=F, 
+my_read_rawdata_csv <- function(SAVE_RAW_DATA=F, 
+                                folder_for_raw_data="raw_data", 
                                 folder_for_save_raw_data_r="r_objects") {
   pfad_for_raw_data <- paste0("./", folder_for_raw_data)
   to_read_files <- dir(pfad_for_raw_data)
@@ -23,7 +23,7 @@ my_read_rawdata_csv <- function(folder_for_raw_data,
     print(paste0("The file <", to_read_files[i], "> has been read"))
   }
   if(SAVE_RAW_DATA) {
-    save(rawdata, file = paste0(folder_for_save_raw_data_r, "/rawdata.RData"))
+    save(rawdata, file = paste0(folder_for_save_raw_data_r, "/rawdata.RObject"))
   }
   return(rawdata)
 }
