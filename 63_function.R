@@ -4,6 +4,7 @@
 # 'data.frame':
 #  $ time_var       : int
 #  $ time_series_var: num
+# m=100 - Number of points for the image (line)!!!
 
 sp.resampler <- function(sp.frame) {
   n <- nrow(sp.frame)
@@ -37,7 +38,7 @@ sp.spline.cis <- function(sp.frame,B,alpha, m=100, spar_par=0.45) {
 # time_series_spline <- sp.spline.cis(sp.frame=test_df,
 #                                     B=1000,
 #                                     alpha=0.05, 
-#                                     m=100, 
+#                                     m=nrow(test_df), # 100
 #                                     spar_par=0.15)
 # plot(test_df$time_var, test_df$time_series_var, xlab="Time", ylab="Time Series")
 # 
@@ -45,3 +46,4 @@ sp.spline.cis <- function(sp.frame,B,alpha, m=100, spar_par=0.45) {
 # lines(x=time_series_spline$x,y=time_series_spline$main.curve,col="red",lwd=2)
 # lines(x=time_series_spline$x,y=time_series_spline$lower.ci,col="blue",lty=2)
 # lines(x=time_series_spline$x,y=time_series_spline$upper.ci,col="blue",lty=2) 
+# test_df$time_series_var <- time_series_spline$main.curve # attention!!! m = nrow(test_df)!!!
