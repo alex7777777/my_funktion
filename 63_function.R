@@ -1,5 +1,4 @@
 # Easy splines for Time Series
-# by Alex Gorbach, 2019-12-15
 
 # Data structur for DF:
 # 'data.frame':
