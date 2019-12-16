@@ -27,7 +27,7 @@ sp.spline.cis <- function(sp.frame,B,alpha, m=100, spar_par=0.45) {
               x=seq(from=min(sp.frame[,1]),to=max(sp.frame[,1]),length.out=m)))
 }
 
-# testing:
+# TESTING 1:
 # set.seed(1)
 # n <- 1e3
 # test_df <- data.frame(time_var = 1:n,
@@ -47,3 +47,39 @@ sp.spline.cis <- function(sp.frame,B,alpha, m=100, spar_par=0.45) {
 # lines(x=time_series_spline$x,y=time_series_spline$lower.ci,col="blue",lty=2)
 # lines(x=time_series_spline$x,y=time_series_spline$upper.ci,col="blue",lty=2) 
 # test_df$time_series_var <- time_series_spline$main.curve # attention!!! m = nrow(test_df)!!!
+
+# # TESTING 2:
+# # with saved images & different spar parameters 
+# set.seed(123)
+# n <- 100
+# test_df <- data.frame(time_v = 1:n,
+#                       umsatz = round(cos(seq(0, 1.4*pi, length.out = n)) +
+#                         rnorm(n=n, mean = 30, sd=0.4), digits = 2))
+# plot(test_df$time_v, test_df$umsatz, xlab="Zeit", ylab="Umsatz, EUR")
+# 
+# spar_par <- seq(0.1,1,0.1)
+# my_images <- list()
+# get_all_my_function("17_function.R")
+# test_df <- my_add_new_var(test_df, length(spar_par), "umsatz_glat_", 0)
+# 
+# get_all_my_function("04_function.R")
+# 
+# for(i in 1:length(spar_par)) {
+#   
+#   time_series_spline <- sp.spline.cis(test_df, 1000, 0.05, nrow(test_df),spar_par[i]) # 0.9; 0.5; 0.1
+#   
+#   my_images[[i]] <- {
+#     plot(test_df$time_v, test_df$umsatz, xlab="Zeit", ylab="Umsatz, EUR")
+#     lines(x=time_series_spline$x,y=time_series_spline$main.curve,col="red",lwd=2)
+#     lines(x=time_series_spline$x,y=time_series_spline$lower.ci,col="blue",lty=2)
+#     lines(x=time_series_spline$x,y=time_series_spline$upper.ci,col="blue",lty=2)
+#   }
+# 
+#   test_df[,2+i] <- round(time_series_spline$main.curve, digits = 2)
+#   
+#   my_save_img_function(my_images[[i]], paste0("smoothing_spar=", spar_par[i]))
+#   dev.off()
+# }
+# 
+# View(test_df)
+
