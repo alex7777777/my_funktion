@@ -16,3 +16,12 @@ my_outliers_detect <- function(x, na.rm = TRUE, ...) {
 # outliers_df <- data.frame(my_outliers_detect(orig_var)[1],
 #                           my_outliers_detect(var_with_outlier)[2])
 # print(paste0("Proportion of the outlier: ", my_outliers_detect(orig_var)[3]))
+# # OR
+# outliers_dv <- data.frame(my_outliers_detect(modeling_df$sales_growth)[1],
+#                           my_outliers_detect(modeling_df$sales_growth)[2])
+# perc_dv     <- data.frame(my_outliers_detect(modeling_df$sales_growth)[3])
+# 
+# for(i in 1:ncol(modeling_df)) {
+#   perc <- my_outliers_detect(unlist(modeling_df %>% select(i)))[3]
+#   cat(paste0("VarN ", i, ". <", names(modeling_df)[i], ">: Proportion of outliers: ", perc, "\n"))
+# }
