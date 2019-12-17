@@ -1,7 +1,6 @@
 #######################################################
 # 65_function.R
 # 2019-12-17 - by Alex Gorbach
-# DB Datensatz Carsharing - Flinkster
 #######################################################
 
 # Function: visual check images generator
@@ -22,11 +21,11 @@
 
 set.seed(1)
 
-N<-6  # ANZAHL ZUFFAELLIGER ZEITFENSTER (i<-1)
-D<-14 # ANZAHL AUF ABBILDUNG GEZEIGTEN TAGEN
-M<-15 # ANZAHL PAAR-VARIABLEN ZUM VERGLEICH (j<-1)
-t<-1  # LAUFENDE BILDER-NUMMER FUER SPEICHERN
-my_color <- "red" # FARBE FUER LINIEN
+# N - ANZAHL ZUFFAELLIGER ZEITFENSTER (i<-1)
+# D - ANZAHL AUF ABBILDUNG GEZEIGTEN TAGEN
+# M - ANZAHL PAAR-VARIABLEN ZUM VERGLEICH (j<-1)
+# t - LAUFENDE BILDER-NUMMER FUER SPEICHERN
+# my_color <- "red" # FARBE FUER LINIEN
 
 
 my_images_generator <- function(my_df, N=6, D=14, M=15, my_color="red") {
