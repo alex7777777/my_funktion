@@ -27,15 +27,15 @@ set.seed(1)
 # t - LAUFENDE BILDER-NUMMER FUER SPEICHERN
 # my_color <- "red" # FARBE FUER LINIEN
 
-
 my_images_generator <- function(my_df, N=6, D=14, M=15, my_color="red") {
   
   # GENERIEREN VON ZUFFAELLIGEN ZETRAEUMEN
   time_start <- sort(floor(runif(N, min=1, max=nrow(my_df)-D*24)))
   my_images <- list()
   get_all_my_function("04_function.R")
+  t <- 1
   
-  for(j in 1:15) {
+  for(j in 1:M) {
     for(i in 1:N) {
       
       twindow <- time_start[i]:(time_start[i]+D*24)
@@ -51,7 +51,7 @@ my_images_generator <- function(my_df, N=6, D=14, M=15, my_color="red") {
                          max(my_df[twindow,1])),
              xlab = "",
              ylab = paste0("Real (points) vs. Predictiv values (", my_color, ")"),
-             ylim=c(0,round(max(my_df[,1+j]))) )
+             ylim=c(0,round(max(my_df[,1+j], na.rm=T))) )
         
         par(new=T)
         
@@ -63,7 +63,7 @@ my_images_generator <- function(my_df, N=6, D=14, M=15, my_color="red") {
                            paste0(names(my_df)[1+j], 
                                   # "_from_", min(my_df[twindow,1]),
                                   # "_to_", max(my_df[twindow,1]),
-                                  "_curr_nr_", t))
+                                  "_", t))
       t <- t+1
       
       dev.off()
@@ -80,4 +80,4 @@ my_images_generator <- function(my_df, N=6, D=14, M=15, my_color="red") {
   return(cat(paste0(i*j, " pictures were generated\n")))
 }
 
-# my_images_generator(resultat_pred)
+# my_images_generator(resultat_pred, 6, 7, 15, "darkgoldenrod")
