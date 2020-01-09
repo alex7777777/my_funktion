@@ -62,5 +62,7 @@ svens_one_event_day_rule <- function(data,
   
   print(paste0("The number of lines after deletion: ", nrow(data)))
   
+  rownames(data) <- NULL
+  
   return(data)
 }
